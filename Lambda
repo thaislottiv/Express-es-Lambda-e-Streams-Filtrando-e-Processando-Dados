@@ -1,0 +1,54 @@
+import java.util.*;
+import java.util.stream.Collectors;
+
+class Transacao {
+    private final String descricao;
+    private final double valor;
+    private final String tipo; // "Débito" ou "Crédito"
+
+    public Transacao(String descricao, double valor, String tipo) {
+        this.descricao = descricao;
+        this.valor = valor;
+        this.tipo = tipo;
+    }
+
+    public double getValor() {
+        return valor;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    @Override
+    public String toString() {
+        return descricao + " - " + tipo + ": " + valor;
+    }
+}
+
+public class SistemaBancario {
+    public static void main(String[] args) {
+        List<Transacao> transacoes = List.of(
+            new Transacao("Salário", 3000, "Crédito"),
+            new Transacao("Compra no Mercado", -150, "Débito"),
+            new Transacao("Aluguel", -1200, "Débito"),
+            new Transacao("Bônus", 500, "Crédito")
+        );
+
+        // Filtrar transações de débito e somar o total
+        double totalDebito = transacoes.stream()
+            .filter(t -> t.getTipo().equals("Débito"))
+            .mapToDouble(Transacao::getValor)
+            .sum();
+
+        System.out.println("Total de Débito: " + totalDebito);
+
+        // Listar transações ordenadas por valor
+        List<Transacao> transacoesOrdenadas = transacoes.stream()
+            .sorted(Comparator.comparingDouble(Transacao::getValor))
+            .collect(Collectors.toList());
+
+        System.out.println("Transações ordenadas por valor:");
+        transacoesOrdenadas.forEach(System.out::println);
+    }
+}
